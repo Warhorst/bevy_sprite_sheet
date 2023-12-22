@@ -22,6 +22,12 @@ pub struct SpriteSheetPlugin<CreateState: States, NextState: States> {
     next_state: NextState
 }
 
+impl <CreateState: States, NextState: States> SpriteSheetPlugin<CreateState, NextState> {
+    pub fn new(loading_state: CreateState, next_state: NextState) -> Self {
+        Self { loading_state, next_state }
+    }
+}
+
 impl <CreateState: States, NextState: States> Plugin for SpriteSheetPlugin<CreateState, NextState> {
     fn build(&self, app: &mut App) {
         app
