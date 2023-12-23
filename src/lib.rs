@@ -66,17 +66,22 @@ fn create_sprite_sheets_from_aseprite_data(
                 .path()
                 .to_str()
                 .expect("path could not be converted to string")
+                .replace("\\", "/")
                 .replace(".aseprite.json", ""),
             ad
         ))
         .filter_map(|(path, ad)| images
             .iter()
-            .find(|(id, _)| asset_server
-                .get_path(*id)
-                .expect(format!("path for the image with id {:?} could not be retrieved", *id).as_str())
+            // There seems to be an image without a path by default. This call filters it out
+            .filter_map(|(id, image)| match asset_server.get_path(id) {
+                Some(p) => Some((p, image)),
+                None => None
+            })
+            .find(|(asset_path, _)| asset_path
                 .path()
                 .to_str()
                 .expect("path could not be converted to string")
+                .replace("\\", "/")
                 .contains(&path)
             )
             .map(|(_, image)| (path, ad, image.clone()))
