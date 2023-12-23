@@ -65,7 +65,7 @@ fn create_sprite_sheets_from_aseprite_data(
                 .expect("aseprite data should be loaded")
                 .path()
                 .to_str()
-                .unwrap()
+                .expect("path could not be converted to string")
                 .replace(".aseprite.json", ""),
             ad
         ))
@@ -73,10 +73,10 @@ fn create_sprite_sheets_from_aseprite_data(
             .iter()
             .find(|(id, _)| asset_server
                 .get_path(*id)
-                .unwrap()
+                .expect(format!("path for the image with id {:?} could not be retrieved", *id).as_str())
                 .path()
                 .to_str()
-                .unwrap()
+                .expect("path could not be converted to string")
                 .contains(&path)
             )
             .map(|(_, image)| (path, ad, image.clone()))
