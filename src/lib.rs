@@ -4,6 +4,7 @@ mod rect;
 use std::collections::HashMap;
 use bevy_app::prelude::*;
 use bevy_asset::prelude::*;
+use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_ecs::prelude::*;
 use bevy_render::prelude::*;
 use bevy_render::render_resource::Extent3d;
@@ -31,6 +32,7 @@ impl <CreateState: States, NextState: States> SpriteSheetPlugin<CreateState, Nex
 impl <CreateState: States, NextState: States> Plugin for SpriteSheetPlugin<CreateState, NextState> {
     fn build(&self, app: &mut App) {
         app
+            .add_plugins(JsonAssetPlugin::<AsepriteData>::new(&["aseprite.json"]))
             .add_systems(
                 OnEnter(self.loading_state.clone()),
                 create_sprite_sheets(self.next_state.clone())
