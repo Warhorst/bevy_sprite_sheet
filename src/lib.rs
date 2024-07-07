@@ -7,8 +7,11 @@ use bevy_asset::prelude::*;
 use bevy_common_assets::json::JsonAssetPlugin;
 use bevy_ecs::prelude::*;
 use bevy_render::prelude::*;
+use bevy_render::render_asset::RenderAssetUsages;
+use bevy_state::prelude::*;
 use bevy_render::render_resource::Extent3d;
 use bevy_render::texture::TextureFormatPixelInfo;
+use bevy_state::state::FreelyMutableState;
 use crate::aseprite_data::AsepriteData;
 use crate::rect::Rect;
 
@@ -16,20 +19,20 @@ use crate::rect::Rect;
 /// assets. The sheets will be loaded when entering CreateState and afterwards, the plugin will switch to NextState.
 ///
 /// Important: The aseprite json assets and associated image assets must be loaded in before.
-pub struct SpriteSheetPlugin<CreateState: States, NextState: States> {
+pub struct SpriteSheetPlugin<CreateState: States + FreelyMutableState, NextState: States + FreelyMutableState> {
     /// The state the plugin will start creating all sprite sheets.
     loading_state: CreateState,
     /// The state the plugin will switch to when all sprite sheets were created
     next_state: NextState
 }
 
-impl <CreateState: States, NextState: States> SpriteSheetPlugin<CreateState, NextState> {
+impl <CreateState: States + FreelyMutableState, NextState: States + FreelyMutableState> SpriteSheetPlugin<CreateState, NextState> {
     pub fn new(loading_state: CreateState, next_state: NextState) -> Self {
         Self { loading_state, next_state }
     }
 }
 
-impl <CreateState: States, NextState: States> Plugin for SpriteSheetPlugin<CreateState, NextState> {
+impl <CreateState: States + FreelyMutableState, NextState: States + FreelyMutableState> Plugin for SpriteSheetPlugin<CreateState, NextState> {
     fn build(&self, app: &mut App) {
         app
             .add_plugins(JsonAssetPlugin::<AsepriteData>::new(&["aseprite.json"]))
@@ -41,7 +44,7 @@ impl <CreateState: States, NextState: States> Plugin for SpriteSheetPlugin<Creat
     }
 }
 
-fn create_sprite_sheets<S: States>(followup_state: S) -> impl Fn(Commands, Res<AssetServer>, ResMut<Assets<Image>>, Res<Assets<AsepriteData>>, ResMut<NextState<S>>) {
+fn create_sprite_sheets<S: States + FreelyMutableState>(followup_state: S) -> impl Fn(Commands, Res<AssetServer>, ResMut<Assets<Image>>, Res<Assets<AsepriteData>>, ResMut<NextState<S>>) {
     move |mut commands, asset_server, mut images, aseprite_data, mut next_state| {
         commands.insert_resource(create_sprite_sheets_from_aseprite_data(
             &asset_server,
@@ -123,6 +126,7 @@ pub fn split_image_by_rectangles<'a>(image: &'a Image, rectangles: impl IntoIter
                 dimension,
                 data,
                 format,
+                RenderAssetUsages::all()
             )
         })
 }
