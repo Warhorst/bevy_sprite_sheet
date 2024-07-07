@@ -126,7 +126,7 @@ pub fn split_image_by_rectangles<'a>(image: &'a Image, rectangles: impl IntoIter
                 dimension,
                 data,
                 format,
-                RenderAssetUsages::all()
+                RenderAssetUsages::default()
             )
         })
 }
