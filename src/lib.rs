@@ -80,6 +80,7 @@ fn create_sprite_sheets_from_aseprite_data(
                 Some(p) => Some((p, image)),
                 None => None
             })
+            // search the image which has the same path and name as the aseprite descriptor file
             .find(|(asset_path, _)| asset_path
                 .path()
                 .to_str()
