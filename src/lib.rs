@@ -85,7 +85,9 @@ fn create_sprite_sheets_from_aseprite_data(
                 .to_str()
                 .expect("path could not be converted to string")
                 .replace("\\", "/")
-                .contains(&path)
+                .split(".")
+                .next()
+                .expect("the image path should have a file ending") == path
             )
             .map(|(_, image)| (path, ad, image.clone()))
         )
