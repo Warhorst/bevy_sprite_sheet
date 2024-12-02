@@ -11,7 +11,7 @@ use crate::rect::Rect;
 /// Represents the json data for a sprite sheet that can be generated when exporting a sheet.
 /// Used to load sheets from images using the data from the json file.
 #[derive(Asset, Reflect, Deserialize, Clone)]
-#[reflect_value]
+#[reflect(opaque)]
 pub struct AsepriteData {
     frames: HashMap<String, FrameValue>,
 }
