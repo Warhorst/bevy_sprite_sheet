@@ -122,7 +122,9 @@ pub fn split_image_by_rectangles<'a>(image: &'a Image, rectangles: impl IntoIter
                 depth_or_array_layers: image.texture_descriptor.size.depth_or_array_layers,
             };
 
-            let data = extract_rectangle(image.data.as_slice(), rect, sheet_width, format.pixel_size());
+            let image_data = image.data.as_ref().map(|vec| vec.as_slice()).expect("The image should be loaded");
+
+            let data = extract_rectangle(image_data, rect, sheet_width, format.pixel_size());
             Image::new(
                 size,
                 dimension,
