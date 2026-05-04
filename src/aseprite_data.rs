@@ -27,7 +27,7 @@ impl AsepriteData {
         frames_vec.sort_by(|(ka, _), (kb, _)| match ka.len().cmp(&kb.len()) {
             Less => Less,
             Greater => Greater,
-            Equal => ka.cmp(&kb)
+            Equal => ka.cmp(kb)
         });
 
         frames_vec

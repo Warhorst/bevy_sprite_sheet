@@ -8,7 +8,15 @@ pub struct Rect {
 }
 
 impl Rect {
-    pub fn new(position: Position, width: usize, height: usize) -> Self {
-        Self { position, width, height }
+    pub fn new(
+        position: Position,
+        width: usize,
+        height: usize,
+    ) -> Self {
+        Self {
+            position,
+            width,
+            height,
+        }
     }
 }
